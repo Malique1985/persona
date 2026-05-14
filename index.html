@@ -103,13 +103,20 @@
                     <span id="status-text">investigasi profil, caption dan tag terbaru...</span>
                 </div>
 
-                <!-- Metadata Box (Hidden by default) -->
+                <!-- Metadata Box (Expandable) -->
                 <div id="metadata-display" class="metadata-hidden">
                     <div class="metadata-header">
                         <i data-lucide="database"></i>
                         <span>Digital Artifacts Found</span>
                     </div>
-                    <div id="metadata-content"></div>
+                    <div id="metadata-wrapper">
+                        <div id="metadata-content"></div>
+                        <div id="metadata-fade"></div>
+                    </div>
+                    <button id="toggle-metadata-btn" class="view-more-btn">
+                        <span>View More</span>
+                        <i data-lucide="chevron-down"></i>
+                    </button>
                 </div>
             </div>
         </section>

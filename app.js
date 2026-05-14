@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsSection = document.getElementById('results-section');
     const metadataDisplay = document.getElementById('metadata-display');
     const metadataContent = document.getElementById('metadata-content');
+    const toggleMetadataBtn = document.getElementById('toggle-metadata-btn');
+
+    toggleMetadataBtn.addEventListener('click', () => {
+        const isExpanded = metadataDisplay.classList.toggle('expanded');
+        toggleMetadataBtn.querySelector('span').innerText = isExpanded ? 'Show Less' : 'View More';
+    });
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
     const engineBtns = document.querySelectorAll('.engine-btn');
