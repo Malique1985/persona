@@ -43,6 +43,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function runAnalysis(type, data) {
+        analyzeBtn.disabled = true;
+        analyzeManualBtn.disabled = true;
+        analyzeBtn.style.opacity = '0.5';
+        analyzeManualBtn.style.opacity = '0.5';
+
         instructionText.classList.add('instruction-hidden');
         statusMsg.classList.remove('status-hidden');
         resultsSection.classList.add('results-hidden');
@@ -102,11 +107,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 
             } catch (err) {
                 console.error("Frontend Error:", err);
-                statusText.innerText = "Gagal: Pastikan server.js berjalan.";
+                const errorMsg = err.response && err.response.data && err.response.data.error 
+                    ? err.response.data.error 
+                    : "Gagal menganalisa. Coba lagi nanti.";
+                statusText.innerText = `ERR: ${errorMsg}`;
                 setTimeout(() => {
                     statusMsg.classList.add('status-hidden');
                     instructionText.classList.remove('instruction-hidden');
                     trustSection.classList.remove('results-hidden'); // Show again on error
+                    
+                    analyzeBtn.disabled = false;
+                    analyzeManualBtn.disabled = false;
+                    analyzeBtn.style.opacity = '1';
+                    analyzeManualBtn.style.opacity = '1';
                 }, 3000);
                 return;
             }
@@ -115,6 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         statusMsg.classList.add('status-hidden');
         metadataDisplay.classList.add('metadata-hidden');
         trustSection.classList.add('results-hidden'); // Hide on results
+        
+        analyzeBtn.disabled = false;
+        analyzeManualBtn.disabled = false;
+        analyzeBtn.style.opacity = '1';
+        analyzeManualBtn.style.opacity = '1';
+
         displayResults(finalData);
     }
 

@@ -134,7 +134,11 @@ app.post('/scrape', async (req, res) => {
 
     } catch (error) {
         console.error('[ERR]', error.message);
-        res.status(500).json({ error: 'Gagal menembus proteksi Instagram.' });
+        if (error.response && error.response.status === 429) {
+            res.status(429).json({ error: 'Sistem sibuk (Rate Limit). Mohon tunggu 1 menit lalu coba lagi.' });
+        } else {
+            res.status(500).json({ error: 'Gagal menganalisa profil. Pastikan link benar dan publik.' });
+        }
     }
 });
 
