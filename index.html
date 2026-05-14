@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona AI | Digital DNA Profiler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="container">
+        <header class="hero-compact">
+            <div class="logo">
+                <i data-lucide="brain-circuit"></i>
+                <span>Persona AI</span>
+            </div>
+            <h1>Digital <span class="gradient-text">DNA</span> Profiler</h1>
+        </header>
+
+        <section class="input-section">
+            <div class="glass-card main-input-card compact">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="auto">Auto Scan</button>
+                    <button class="tab-btn" data-tab="manual">Manual Analysis</button>
+                </div>
+
+                <!-- Analysis Mode Selector -->
+                <div class="engine-selector">
+                    <button class="engine-btn active" data-engine="ocean">
+                        <i data-lucide="user"></i> 
+                        <span>Personal DNA (OCEAN)</span>
+                        <div class="info-icon" data-tooltip="Analisis kepribadian dasar, emosi, dan karakter sosial seseorang.">
+                            <i data-lucide="info"></i>
+                        </div>
+                    </button>
+                    <button class="engine-btn" data-engine="disc">
+                        <i data-lucide="briefcase"></i> 
+                        <span>Professional Fit (HRD)</span>
+                        <div class="info-icon" data-tooltip="Analisis perilaku kerja, gaya komunikasi, dan potensi kepemimpinan untuk rekrutmen.">
+                            <i data-lucide="info"></i>
+                        </div>
+                    </button>
+                </div>
+
+                <div id="tab-auto" class="tab-content active">
+                    <div class="input-wrapper-compact">
+                        <input type="text" id="profile-url" placeholder="Paste IG/FB Link..." autocomplete="off">
+                        <button id="analyze-btn">Analyze <i data-lucide="sparkles"></i></button>
+                    </div>
+                </div>
+
+                <div id="tab-manual" class="tab-content">
+                    <div class="manual-grid">
+                        <textarea id="manual-bio" placeholder="Bio Profil..."></textarea>
+                        <textarea id="manual-captions" placeholder="Kumpulan Caption..."></textarea>
+                    </div>
+                    <button id="analyze-manual-btn" class="primary-btn-compact">Calibrate DNA</button>
+                </div>
+
+                <div id="instruction-text" class="instruction-visible">
+                    <i data-lucide="info" size="14"></i>
+                    <span>Masukkan link profil medsos seperti instagram.com/nama-anda, lalu klik tombol Analyze.</span>
+                </div>
+
+                <div id="status-message" class="status-hidden">
+                    <div class="loader"></div>
+                    <span id="status-text">investigasi profil, caption dan tag terbaru...</span>
+                </div>
+
+                <!-- Metadata Box (Hidden by default) -->
+                <div id="metadata-display" class="metadata-hidden">
+                    <div class="metadata-header">
+                        <i data-lucide="database"></i>
+                        <span>Digital Artifacts Found</span>
+                    </div>
+                    <div id="metadata-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="results-section" class="results-hidden">
+            <div class="results-top-grid">
+                <!-- Radar -->
+                <div class="glass-card compact-card chart-card">
+                    <h3>Psychological Radar</h3>
+                    <div class="chart-container">
+                        <canvas id="oceanChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="glass-card compact-card summary-card">
+                    <div class="results-header">
+                        <div class="profile-circle">Profile</div>
+                        <div>
+                            <h2 id="profile-name">@username</h2>
+                            <p id="profile-type" class="gradient-text">Archetype</p>
+                        </div>
+                        <button class="icon-btn" id="download-btn"><i data-lucide="download"></i></button>
+                    </div>
+                    <div class="analysis-box">
+                        <p id="analysis-text">Loading...</p>
+                        <div class="tags-container" id="tags"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="traits-narrative-grid">
+                <div class="trait-narrative-card">
+                    <div class="trait-header">
+                        <span class="trait-title">Openness</span>
+                        <span class="trait-score" id="val-o">0%</span>
+                    </div>
+                    <div class="mini-bar"><div class="bar" id="bar-o"></div></div>
+                    <p class="trait-desc" id="nar-o">Description...</p>
+                </div>
+                <div class="trait-narrative-card">
+                    <div class="trait-header">
+                        <span class="trait-title">Conscientiousness</span>
+                        <span class="trait-score" id="val-c">0%</span>
+                    </div>
+                    <div class="mini-bar"><div class="bar" id="bar-c"></div></div>
+                    <p class="trait-desc" id="nar-c">Description...</p>
+                </div>
+                <div class="trait-narrative-card">
+                    <div class="trait-header">
+                        <span class="trait-title">Extraversion</span>
+                        <span class="trait-score" id="val-e">0%</span>
+                    </div>
+                    <div class="mini-bar"><div class="bar" id="bar-e"></div></div>
+                    <p class="trait-desc" id="nar-e">Description...</p>
+                </div>
+                <div class="trait-narrative-card">
+                    <div class="trait-header">
+                        <span class="trait-title">Agreeableness</span>
+                        <span class="trait-score" id="val-a">0%</span>
+                    </div>
+                    <div class="mini-bar"><div class="bar" id="bar-a"></div></div>
+                    <p class="trait-desc" id="nar-a">Description...</p>
+                </div>
+                <div class="trait-narrative-card">
+                    <div class="trait-header">
+                        <span class="trait-title">Neuroticism</span>
+                        <span class="trait-score" id="val-n">0%</span>
+                    </div>
+                    <div class="mini-bar"><div class="bar" id="bar-n"></div></div>
+                    <p class="trait-desc" id="nar-n">Description...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
