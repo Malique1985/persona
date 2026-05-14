@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusText = document.getElementById('status-text');
     const instructionText = document.getElementById('instruction-text');
     const resultsSection = document.getElementById('results-section');
+    const trustSection = document.getElementById('trust-section');
     const metadataDisplay = document.getElementById('metadata-display');
     const metadataContent = document.getElementById('metadata-content');
     const toggleMetadataBtn = document.getElementById('toggle-metadata-btn');
@@ -47,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsSection.classList.add('results-hidden');
         resultsSection.classList.remove('results-visible');
         metadataDisplay.classList.add('metadata-hidden');
+        trustSection.classList.remove('results-hidden'); // Show while loading/input stage
         
         // CLEAR OLD TRAIT CARDS
         const traitGrid = document.querySelector('.traits-narrative-grid');
@@ -104,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     statusMsg.classList.add('status-hidden');
                     instructionText.classList.remove('instruction-hidden');
+                    trustSection.classList.remove('results-hidden'); // Show again on error
                 }, 3000);
                 return;
             }
@@ -111,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         statusMsg.classList.add('status-hidden');
         metadataDisplay.classList.add('metadata-hidden');
+        trustSection.classList.add('results-hidden'); // Hide on results
         displayResults(finalData);
     }
 
