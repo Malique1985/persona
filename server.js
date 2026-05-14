@@ -50,42 +50,39 @@ app.post('/scrape', async (req, res) => {
         await page.mouse.wheel(0, 300);
         await page.waitForTimeout(1000);
 
-        // SCRAPING LOGIC (MOBILE OPTIMIZED & FILTERED)
+        // --- ULTRA-STEALTH ADAPTIVE SCRAPE ---
         const data = await page.evaluate(() => {
+            const cleanText = (t) => t ? t.replace(/\s+/g, ' ').trim() : "";
+            
             const getBio = () => {
-                const candidates = [
-                    document.querySelector('header section div:nth-child(3) span'),
-                    document.querySelector('main header section div span'),
-                    // Cari span yang bukan statistik (tidak mengandung angka murni atau kata pengikut)
-                    ...Array.from(document.querySelectorAll('span')).filter(s => {
-                        const t = s.innerText;
-                        return t.length > 10 && !t.includes('pengikut') && !t.includes('diikuti') && !t.includes('postingan');
-                    })
-                ];
-                for (const el of candidates) {
-                    if (el) {
-                        const txt = el.innerText.trim();
-                        if (txt && txt.length > 5 && !txt.includes('Instagram')) return txt;
-                    }
-                }
-                return "Bio tidak tersedia / Tersembunyi.";
+                const spans = Array.from(document.querySelectorAll('span, h1, div'));
+                const statsKeywords = ['pengikut', 'diikuti', 'following', 'followers', 'posts', 'postingan'];
+                
+                // Cari teks yang bukan statistik dan punya panjang yang masuk akal
+                const bioEl = spans.find(s => {
+                    const t = s.innerText.toLowerCase();
+                    return t.length > 3 && 
+                           !statsKeywords.some(k => t.includes(k)) && 
+                           !t.includes('instagram') &&
+                           s.children.length === 0; // Ambil yang paling dalam (leaf node)
+                });
+                return bioEl ? bioEl.innerText : "Bio tidak ditemukan atau tersembunyi.";
             };
 
             const getCaptions = () => {
                 const imgs = Array.from(document.querySelectorAll('img'));
+                const blacklist = ['foto profil', 'profile picture', 'icon', 'logo'];
                 return imgs
                     .map(img => img.getAttribute('alt'))
                     .filter(alt => {
-                        return alt && 
-                               alt.length > 20 && 
-                               !alt.toLowerCase().includes('foto profil') && 
-                               !alt.toLowerCase().includes('profile picture') &&
-                               !alt.toLowerCase().includes('photo by');
+                        if (!alt || alt.length < 5) return false;
+                        const lowAlt = alt.toLowerCase();
+                        return !blacklist.some(b => lowAlt.includes(b));
                     })
                     .slice(0, 15);
             };
 
-            return { bio: getBio(), captions: getCaptions() };
+            return { bio: cleanText(getBio()), captions: getCaptions() };
         });
 
         await browser.close();
