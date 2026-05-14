@@ -50,32 +50,39 @@ app.post('/scrape', async (req, res) => {
         await page.mouse.wheel(0, 300);
         await page.waitForTimeout(1000);
 
-        // SCRAPING LOGIC (MOBILE OPTIMIZED)
+        // SCRAPING LOGIC (MOBILE OPTIMIZED & FILTERED)
         const data = await page.evaluate(() => {
             const getBio = () => {
-                // Mencari bio di berbagai kemungkinan struktur IG Mobile
                 const candidates = [
                     document.querySelector('header section div:nth-child(3) span'),
                     document.querySelector('main header section div span'),
-                    document.querySelector('meta[property="og:description"]'),
-                    ...Array.from(document.querySelectorAll('span')).filter(s => s.innerText.length > 10)
+                    // Cari span yang bukan statistik (tidak mengandung angka murni atau kata pengikut)
+                    ...Array.from(document.querySelectorAll('span')).filter(s => {
+                        const t = s.innerText;
+                        return t.length > 10 && !t.includes('pengikut') && !t.includes('diikuti') && !t.includes('postingan');
+                    })
                 ];
                 for (const el of candidates) {
                     if (el) {
-                        const txt = el.tagName === 'META' ? el.getAttribute('content') : el.innerText;
-                        if (txt && !txt.includes('Instagram')) return txt;
+                        const txt = el.innerText.trim();
+                        if (txt && txt.length > 5 && !txt.includes('Instagram')) return txt;
                     }
                 }
-                return "Profil terproteksi / Login Wall aktif.";
+                return "Bio tidak tersedia / Tersembunyi.";
             };
 
             const getCaptions = () => {
-                // Mengambil dari alt text gambar (paling konsisten di server)
                 const imgs = Array.from(document.querySelectorAll('img'));
                 return imgs
                     .map(img => img.getAttribute('alt'))
-                    .filter(alt => alt && alt.length > 20 && !alt.includes('profile picture'))
-                    .slice(0, 12);
+                    .filter(alt => {
+                        return alt && 
+                               alt.length > 20 && 
+                               !alt.toLowerCase().includes('foto profil') && 
+                               !alt.toLowerCase().includes('profile picture') &&
+                               !alt.toLowerCase().includes('photo by');
+                    })
+                    .slice(0, 15);
             };
 
             return { bio: getBio(), captions: getCaptions() };
