@@ -122,26 +122,41 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update Trait Cards
             const traitKeys = Object.keys(data.scores);
             const traitGrid = document.querySelector('.traits-narrative-grid');
-            traitGrid.innerHTML = ''; 
-
-            const fullLabels = {
-                o: "Openness", c: "Conscientiousness", e: "Extraversion", a: "Agreeableness", n: "Neuroticism",
-                d: "Dominance", i: "Influence", s: "Steadiness", l: "Leadership"
+            // Fallback Label & Definition Dictionary
+            const traitLibrary = {
+                o: { label: "Openness", desc: "Mengukur tingkat kreativitas, rasa ingin tahu, dan keterbukaan terhadap ide-ide baru." },
+                c: { label: "Conscientiousness", desc: "Mengukur tingkat keteraturan, tanggung jawab, dan kedisiplinan dalam mencapai tujuan." },
+                e: { label: "Extraversion", desc: "Mengukur tingkat energi sosial, keaktifan berinteraksi, dan kenyamanan di keramaian." },
+                a: { label: "Agreeableness", desc: "Mengukur tingkat keramahan, sifat kooperatif, dan empati terhadap orang lain." },
+                n: { label: "Neuroticism", desc: "Mengukur stabilitas emosional dan kerentanan terhadap stres atau tekanan." },
+                d: { label: "Dominance", desc: "Mengukur ketegasan, fokus pada hasil, dan keinginan untuk memegang kendali." },
+                i: { label: "Influence", desc: "Mengukur kemampuan persuasi, optimisme, dan antusiasme dalam berinteraksi." },
+                s: { label: "Steadiness", desc: "Mengukur loyalitas, konsistensi, dan ketenangan dalam bekerja." },
+                l: { label: "Leadership", desc: "Mengukur potensi kepemimpinan, visi, dan kemampuan menggerakkan orang lain." }
             };
             
             // Overwrite 'c' for Professional mode
-            if (currentEngine === 'disc') fullLabels.c = "Compliance";
+            if (currentEngine === 'disc') {
+                traitLibrary.c = { label: "Compliance", desc: "Mengukur ketelitian, kepatuhan pada aturan, dan standar kualitas tinggi." };
+            }
 
             traitKeys.forEach(key => {
                 const val = data.scores[key];
-                const label = (data.labels && data.labels[key]) || fullLabels[key.toLowerCase()] || key.toUpperCase();
+                const traitData = traitLibrary[key.toLowerCase()] || { label: key.toUpperCase(), desc: "Parameter analisa kepribadian." };
+                const label = (data.labels && data.labels[key]) || traitData.label;
                 const nar = data.narratives[key] || "No data.";
 
                 const card = document.createElement('div');
                 card.className = 'trait-narrative-card';
                 card.innerHTML = `
                     <div class="trait-header">
-                        <span class="trait-title">${label}</span>
+                        <div class="trait-title-wrapper">
+                            <span class="trait-title">${label}</span>
+                            <div class="info-trigger-mini">
+                                <i data-lucide="info"></i>
+                                <div class="tooltip-mini">${traitData.desc}</div>
+                            </div>
+                        </div>
                         <span class="trait-score">${val}%</span>
                     </div>
                     <div class="mini-bar"><div class="bar" style="width: ${val}%"></div></div>
@@ -150,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 traitGrid.appendChild(card);
             });
 
+            if (window.lucide) window.lucide.createIcons();
             renderRadarChart(data.scores, data.labels);
             
             resultsSection.classList.remove('results-hidden');
