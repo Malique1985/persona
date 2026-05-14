@@ -117,7 +117,7 @@
         <section id="results-section" class="results-hidden">
             <div class="results-top-grid">
                 <!-- Radar -->
-                <div class="glass-card compact-card chart-card">
+                <div class="glass-card chart-card">
                     <h3>Psychological Radar</h3>
                     <div class="chart-container">
                         <canvas id="oceanChart"></canvas>
@@ -125,64 +125,26 @@
                 </div>
 
                 <!-- Summary -->
-                <div class="glass-card compact-card summary-card">
-                    <div class="results-header">
-                        <div class="profile-circle">Profile</div>
-                        <div>
+                <div class="glass-card profile-card">
+                    <div class="profile-header">
+                        <div class="profile-circle">P</div>
+                        <div class="profile-info">
                             <h2 id="profile-name">@username</h2>
                             <p id="profile-type" class="gradient-text">Archetype</p>
                         </div>
-                        <button class="icon-btn" id="download-btn"><i data-lucide="download"></i></button>
+                        <button class="primary-btn" id="download-btn" onclick="window.print()" style="padding: 0.5rem 1rem;">
+                            <i data-lucide="download"></i>
+                        </button>
                     </div>
-                    <div class="analysis-box">
+                    <div class="profile-summary">
                         <p id="analysis-text">Loading...</p>
-                        <div class="tags-container" id="tags"></div>
+                        <div class="tags" id="tags"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="traits-narrative-grid">
-                <div class="trait-narrative-card">
-                    <div class="trait-header">
-                        <span class="trait-title">Openness</span>
-                        <span class="trait-score" id="val-o">0%</span>
-                    </div>
-                    <div class="mini-bar"><div class="bar" id="bar-o"></div></div>
-                    <p class="trait-desc" id="nar-o">Description...</p>
-                </div>
-                <div class="trait-narrative-card">
-                    <div class="trait-header">
-                        <span class="trait-title">Conscientiousness</span>
-                        <span class="trait-score" id="val-c">0%</span>
-                    </div>
-                    <div class="mini-bar"><div class="bar" id="bar-c"></div></div>
-                    <p class="trait-desc" id="nar-c">Description...</p>
-                </div>
-                <div class="trait-narrative-card">
-                    <div class="trait-header">
-                        <span class="trait-title">Extraversion</span>
-                        <span class="trait-score" id="val-e">0%</span>
-                    </div>
-                    <div class="mini-bar"><div class="bar" id="bar-e"></div></div>
-                    <p class="trait-desc" id="nar-e">Description...</p>
-                </div>
-                <div class="trait-narrative-card">
-                    <div class="trait-header">
-                        <span class="trait-title">Agreeableness</span>
-                        <span class="trait-score" id="val-a">0%</span>
-                    </div>
-                    <div class="mini-bar"><div class="bar" id="bar-a"></div></div>
-                    <p class="trait-desc" id="nar-a">Description...</p>
-                </div>
-                <div class="trait-narrative-card">
-                    <div class="trait-header">
-                        <span class="trait-title">Neuroticism</span>
-                        <span class="trait-score" id="val-n">0%</span>
-                    </div>
-                    <div class="mini-bar"><div class="bar" id="bar-n"></div></div>
-                    <p class="trait-desc" id="nar-n">Description...</p>
-                </div>
-            </div>
+            <!-- GRID INI AKAN DIISI OTOMATIS OLEH JS -->
+            <div class="traits-narrative-grid"></div>
         </section>
     </main>
 

@@ -41,6 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsSection.classList.add('results-hidden');
         resultsSection.classList.remove('results-visible');
         metadataDisplay.classList.add('metadata-hidden');
+        
+        // CLEAR OLD TRAIT CARDS
+        const traitGrid = document.querySelector('.traits-narrative-grid');
+        if (traitGrid) traitGrid.innerHTML = '';
 
         let finalData;
 
