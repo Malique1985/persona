@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
 const { chromium } = require('playwright');
 const axios = require('axios');
 const cors = require('cors');
@@ -8,23 +9,34 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve Static Files (Frontend)
+app.use(express.static(path.join(__dirname)));
+
 const CONFIG = {
     API_KEY: process.env.GROQ_API_KEY,
     MODEL: "llama-3.3-70b-versatile",
     URL: "https://api.groq.com/openai/v1/chat/completions"
 };
 
+// Route untuk Halaman Utama
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.post('/scrape', async (req, res) => {
     let { url, engine } = req.body;
     if (url && !url.startsWith('http')) url = 'https://' + url;
     engine = engine || 'ocean';
 
-    console.log(`\n[LOG] ENGINE DETECTED: ${engine.toUpperCase()}`);
-    console.log(`[LOG] TARGET URL: ${url}`);
+    console.log(`\n[LOG] ENGINE: ${engine.toUpperCase()} | URL: ${url}`);
 
     let browser;
     try {
-        browser = await chromium.launch({ headless: true });
+        // Konfigurasi Headless khusus untuk Server
+        browser = await chromium.launch({ 
+            headless: true,
+            args: ['--no-sandbox', '--disable-setuid-sandbox'] 
+        });
         const context = await browser.newContext({
             userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
             viewport: { width: 1280, height: 800 }
@@ -53,32 +65,19 @@ app.post('/scrape', async (req, res) => {
 
         await browser.close();
 
-        // --- CONTEXT SENSITIVE PROMPTS ---
         let systemPrompt = "";
         let userPrompt = "";
 
         if (engine === 'ocean') {
             systemPrompt = "Anda adalah Pakar Psikologi Kepribadian model Big Five (OCEAN).";
             userPrompt = `Analisis Bio: "${bio}" dan Captions: "${captions.join(' | ')}".
-            Berikan skor 0-100 untuk Openness, Conscientiousness, Extraversion, Agreeableness, dan Neuroticism.
             FORMAT JSON: { "scores": {o,c,e,a,n}, "archetype", "summary", "narratives": {o,c,e,a,n} }. Language: Indo.`;
         } else {
             systemPrompt = "Anda adalah Senior HR Director & Recruiter Professional. Fokus pada model DISC + Leadership.";
-            userPrompt = `Tugas: Evaluasi kandidat untuk rekrutmen. JANGAN gunakan model kepribadian umum.
-            Data: Bio: "${bio}" | Captions: "${captions.join(' | ')}".
-            
-            Hitung skor (0-100) untuk metrik berikut:
-            - Dominance (d): Ambisi, hasil, pengambilan risiko.
-            - Influence (i): Persuasi, antusiasme, kolaborasi.
-            - Steadiness (s): Kesabaran, ketulusan, loyalitas.
-            - Compliance (c): Akurasi, standar, logika.
-            - Leadership (l): Potensi kepemimpinan.
-            
-            FORMAT JSON: { "scores": {d,i,s,c,l}, "archetype": "Job Role Personality", "summary": "Executive Summary Rekrutmen", "narratives": {d,i,s,c,l} }. 
-            Bahasa: Indonesia Profesional.`;
+            userPrompt = `Evaluasi kandidat untuk rekrutmen. Data: Bio: "${bio}" | Captions: "${captions.join(' | ')}".
+            FORMAT JSON: { "scores": {d,i,s,c,l}, "archetype": "Job Role Fit", "summary": "Executive Summary", "narratives": {d,i,s,c,l} }. Language: Indo Profesional.`;
         }
 
-        console.log(`[LOG] AI PROCESSING START...`);
         const aiResponse = await axios.post(CONFIG.URL, {
             model: CONFIG.MODEL,
             messages: [
@@ -92,7 +91,6 @@ app.post('/scrape', async (req, res) => {
         });
 
         const analysis = JSON.parse(aiResponse.data.choices[0].message.content);
-        console.log(`[LOG] AI ANALYSIS COMPLETE.`);
         
         res.json({ 
             bio, 
@@ -109,7 +107,8 @@ app.post('/scrape', async (req, res) => {
     }
 });
 
-const PORT = 3001; // PINDAH KE PORT 3001
+// Gunakan Port Dinamis (Dibutuhkan untuk Cloud Hosting)
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`\n🔥 Persona AI (V3 - Port 3001) Active.`);
+    console.log(`\n🚀 Persona AI Online Engine aktif di port ${PORT}`);
 });

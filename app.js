@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             statusText.innerText = "investigasi profil, caption dan tag terbaru...";
             try {
-                const response = await fetch('http://localhost:3001/scrape', {
+                const response = await fetch('/scrape', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ url: data.url, engine: currentEngine })
