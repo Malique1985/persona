@@ -53,40 +53,44 @@
                 <!-- Analysis Mode Selector -->
                 <div class="engine-selector">
                     <div class="engine-btn active" data-engine="ocean">
-                        <i data-lucide="user"></i>
-                        <span>Personal DNA (OCEAN)</span>
+                        <div class="btn-content">
+                            <i data-lucide="user"></i>
+                            <span>Personal DNA (OCEAN)</span>
+                        </div>
                         <div class="info-trigger">
                             <i data-lucide="info"></i>
                             <div class="tooltip">
-                                <strong>Model OCEAN (Big Five):</strong> Standar emas psikologi untuk memetakan kepribadian dasar manusia melalui 5 dimensi utama: Openness, Conscientiousness, Extraversion, Agreeableness, dan Neuroticism. Cocok untuk memahami karakter dan potensi diri.
+                                <strong>Model OCEAN (Big Five):</strong> Standar emas psikologi untuk memetakan kepribadian dasar manusia melalui 5 dimensi utama. Cocok untuk memahami karakter dan potensi diri.
                             </div>
                         </div>
                     </div>
                     <div class="engine-btn" data-engine="disc">
-                        <i data-lucide="briefcase"></i>
-                        <span>Professional Fit (HRD)</span>
+                        <div class="btn-content">
+                            <i data-lucide="briefcase"></i>
+                            <span>Professional Fit (HRD)</span>
+                        </div>
                         <div class="info-trigger">
                             <i data-lucide="info"></i>
                             <div class="tooltip">
-                                <strong>Model DISC + Leadership:</strong> Analisa spesifik rekrutmen untuk mengukur perilaku kerja (Dominance, Influence, Steadiness, Compliance) serta potensi Kepemimpinan. Digunakan oleh HRD profesional untuk menentukan kecocokan kandidat dengan posisi pekerjaan.
+                                <strong>Model DISC + Leadership:</strong> Analisa spesifik rekrutmen untuk mengukur perilaku kerja serta potensi Kepemimpinan bagi HRD profesional.
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="tab-auto" class="tab-content active">
-                    <div class="input-wrapper-compact">
+                    <div class="input-group">
                         <input type="text" id="profile-url" placeholder="Paste IG/FB Link..." autocomplete="off">
-                        <button id="analyze-btn">Analyze <i data-lucide="sparkles"></i></button>
+                        <button id="analyze-btn" class="primary-btn">Analyze <i data-lucide="sparkles"></i></button>
                     </div>
                 </div>
 
                 <div id="tab-manual" class="tab-content">
-                    <div class="manual-grid">
+                    <div class="manual-input-grid">
                         <textarea id="manual-bio" placeholder="Bio Profil..."></textarea>
                         <textarea id="manual-captions" placeholder="Kumpulan Caption..."></textarea>
                     </div>
-                    <button id="analyze-manual-btn" class="primary-btn-compact">Calibrate DNA</button>
+                    <button id="analyze-manual-btn" class="primary-btn" style="width: 100%;">Calibrate DNA</button>
                 </div>
 
                 <div id="instruction-text" class="instruction-visible">
