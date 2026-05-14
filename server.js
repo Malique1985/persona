@@ -107,15 +107,25 @@ app.post('/scrape', async (req, res) => {
             headers: { 'Authorization': `Bearer ${CONFIG.API_KEY}`, 'Content-Type': 'application/json' }
         });
 
-        const analysis = JSON.parse(aiResponse.data.choices[0].message.content);
+        const rawAnalysis = JSON.parse(aiResponse.data.choices[0].message.content);
         
+        // NORMALISASI SKOR (0-1 -> 0-100)
+        const normalizedScores = {};
+        if (rawAnalysis.scores) {
+            for (const [key, val] of Object.entries(rawAnalysis.scores)) {
+                let score = Number(val);
+                if (score <= 1.0 && score > 0) score = score * 100; // Jika 0.6 jadi 60
+                normalizedScores[key] = Math.round(score);
+            }
+        }
+
         res.json({ 
             bio: data.bio, 
             captions: data.captions.join("\n---\n"), 
-            scores: analysis.scores || {}, 
-            archetype: analysis.archetype || "Analyst",
-            summary: analysis.summary || "Selesai.",
-            narratives: analysis.narratives || {}
+            scores: normalizedScores, 
+            archetype: rawAnalysis.archetype || "Analyst",
+            summary: rawAnalysis.summary || "Selesai.",
+            narratives: rawAnalysis.narratives || {}
         });
 
     } catch (error) {
