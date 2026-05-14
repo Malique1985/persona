@@ -378,6 +378,37 @@ textarea {
     font-weight: 700;
 }
 
+.hero-compact { text-align: center; margin-bottom: 2rem; }
+
+.brand-logo-container {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.brand-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 10px rgba(255, 0, 128, 0.2));
+}
+
+.brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 0, 128, 0.05);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 0, 128, 0.1);
+}
+
 #metadata-content {
     line-height: 1.5;
     white-space: pre-wrap;
